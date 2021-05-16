@@ -6,6 +6,9 @@
 *Jefferson Balduino - 1900659
 *Paula Tanaka = 1902879
 *Victor Hugo Martins de Oliveira - 2004526
+*
+*Obs2.: para altrar o estado inicial do puzzle e o estado final, pule para a definição das variáveis
+*       initMatrix e endMatrix e altere-as.
 **/
 #include <stdio.h>
 #include <math.h>
@@ -933,7 +936,7 @@ Node* FindPath(Node* nodeNow, Node* end)
         generate(nodeNow, 0, end);
 
 
-        printf("\n--Selected--\n");
+        printf("\n\n--Selected--");
         printMatrix(nodeNow);
         printf("\n--Childs--");
         printChilds(nodeNow);
@@ -995,7 +998,7 @@ int printBestPath(Node* foundNode, int val)
 int main()
 {
 
-    char r = ' ';
+    char r;
     bool done = true;
 
     if(DEBUG != 1)
@@ -1018,13 +1021,13 @@ int main()
                 done = false;
                 break;
             default:
-                printf("\n\nEscoslha 1 ou 2.\n\n");
+                printf("\n\nEscolha 1 ou 2.\n\n");
                 break;
             }
 
         }
         done = true;
-        char r2 = ' ';
+        char r2;
         while(done)
         {
             printf("Escolha o tipo:\n");
@@ -1099,21 +1102,24 @@ int main()
         mainNode->distFim = pesoDePosicaoDiferente(mainNode, endNode);
 
 
-    printf("PUZZLE INICIAL\n");
+    printf("PUZZLE INICIAL");
 
     printMatrix(mainNode);
 
-    printf("\nPUZZLE FINAL\n");
+    printf("\n\nPUZZLE FINAL");
 
     printMatrix(endNode);
 
-    printf("\n\nINICIANDO BUSCA:\n");
+    printf("\n\n---------------------\nINICIANDO BUSCA:");
     //FindPath! WOooooooooooooooooow 8h +- atÃ© aqui
     Node* foundNode = FindPath(mainNode, endNode);
 
 
 //    int total = nodesTotaisGerados();
     printf("\n\nACHOU O MELHOR CAMINHO!\n");
+
+    printf("TOTAL DE NODES GERADOS: %d\n\n", nodeClosed->size + nodeOpen->size);
+
     //printBestPath(foundNode, 0);
 
 //    int a = 0;

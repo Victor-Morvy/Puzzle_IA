@@ -66,14 +66,20 @@ int endMatrix[3][3] = {
                   {7, 6, 5}
                  };
 
+//define das direÃ¯Â¿Å“Ã¯Â¿Å“es
+#define DOWN 0
+#define LEFT 1
+#define RIGHT 2
+#define UP 3
+
 NodeArray* nodeOpen;
 NodeArray* nodeClosed;
 
-NodeArray* mainArray;
+//NodeArray* mainArray;
 
-int vezesQueGerou = 0;
+//int vezesQueGerou = 0;
 
-int branchDepth = 0;
+//int branchDepth = 0;
 
 struct Vec2{
     int x, y;
@@ -224,11 +230,7 @@ NodeList* getNodeListAt(NodeArray* array, int index)
     }
     return tmp;
 }
-//define das direÃ¯Â¿Å“Ã¯Â¿Å“es
-#define DOWN 0
-#define LEFT 1
-#define RIGHT 2
-#define UP 3
+
 
 //remove o arraylist, concerta a continuidade da array e retorna o ponteiro para NodeList, podendo trata-lo, ou deleta-lo
 NodeList* removeAt(NodeArray* nArr, int index)
@@ -314,8 +316,6 @@ NodeList* removeNodeFromArray(Node* nn)
 
 NodeList* voidRemoveNodeFromArray(Node* nn, NodeArray* nA)
 {
-
-    //Totlmente errada
 
     Node* delIt = nn;
     NodeList* delNl = delIt->nodeListMainParent;
@@ -423,13 +423,6 @@ void closeNode(Node * node)
     }
 }
 
-
-
-// TODO free all malloc before leave
-// TODO pathfinding
-
-// TODO evitar criar ramo de arvore repetido
-
 Vec2 procurarPosicao(Node* node, int valor);
 int generateNodePossibility(Node* testNode, int posX, int posY, Node* final);
 
@@ -457,7 +450,6 @@ int getDistanceToEndNode(Node* nodeNow, Node* endNode, int icognita)
 {
     Vec2 pos1, pos2;
 
-    // BUG está checando apenas a icognita
     pos1 = procurarPosicao(nodeNow, icognita);
     pos2 = procurarPosicao(endNode, icognita);
 
@@ -558,11 +550,6 @@ int generate(Node* nodes, int icognitas, Node* end) //generate childs
 
     return k;
 
-    /*
-    saida = CreateListNode();
-    saida.node = //o primeiro test que Ã¯Â¿Å“ possÃ¯Â¿Å“vel
-    */
-
 }
 
 Vec2 procurarPosicao(Node* node, int valor)
@@ -599,13 +586,12 @@ void arraycpy(Node* to, int fromMatrix[3][3])
         for(int y = 0; y < 3; y ++)
         {
             to->matrix[x][y] = fromMatrix[x][y];
-//to->matrix[x][y] = from->matrix[x][y];
         }
     }
 }
 
 // if is equal, returns 0, else, returns -1
-// isEqual==true?0:1;
+// isEqual==true?0:-1;
 int arraycmp(Node* to, Node* to2)
 {
     for(int x = 0; x < 3; x ++)
@@ -664,7 +650,6 @@ int getNodeIndexInArray(NodeArray* na, Node* n)
     return r;
 }
 
-// TODO if node->matrix already exist in nodeOpen or nodeClosed variable
 int generateNodePossibility(Node* testNode, int posY, int posX, Node* final)
 {
     //Node* fromNode = testNode->nodeListMainParent->mainArray;
@@ -693,16 +678,11 @@ int generateNodePossibility(Node* testNode, int posY, int posX, Node* final)
     int tmpVal = tmpNode->matrix[pos.x][pos.y];
     tmpNode->matrix[pos.x][pos.y] = tmpNode->matrix[pos.x+qy][pos.y+qx];
     tmpNode->matrix[pos.x+qy][pos.y+qx] = tmpVal;
-//tem um erro aq
 
     // TODO test if exists this matrix
     if(nodeMatrixExists(nodeOpen, tmpNode) || nodeMatrixExists(nodeClosed, tmpNode))
     {
-//        NodeList* tmpNL = removeNodeFromArray(tmpNode);
-//        testNode->nodeListMainParent// é isso q vai mudar
-    //destroy all and return
         free(tmpNode);
-        // TODO free tmpNode
         return 0;
     }
 
@@ -711,8 +691,6 @@ int generateNodePossibility(Node* testNode, int posY, int posX, Node* final)
     testNode->childs->mainNode = testNode;
 
     void_push(nodeOpen, tmpNode);
-
-
 
     if(TYPE == AStar)
         tmpNode->distCusto = 1;
@@ -728,9 +706,6 @@ int generateNodePossibility(Node* testNode, int posY, int posX, Node* final)
     else if(HTYPE == SIMPLES)
         tmpNode->distFim = pesoDePosicaoDiferente(tmpNode, final);
 
-
-
-
     return 1;
 }
 
@@ -744,14 +719,12 @@ void printMatrix(Node* n )
     printf("\n%i | %i | %i", n->matrix[2][0], n->matrix[2][1], n->matrix[2][2]);
 
     printf("\nDistancia para a resolucao (h) : %d ", n->distFim);
-    if(TYPE == AStar && HTYPE == DISTANCIA)
+    if(TYPE == AStar)
     {
         printf("\nDistancia para o proximo passo(g): %d ", n->distCusto);
         printf("\nCusto total da Heuristica A*(g + h): %d \n", n->distCusto+n->distFim);
     }
 }
-
-
 
 //limpa todos os caracteres \n e \0 para ' ' até que termine o vetor
 void limparFimString(char* string, int tam)
@@ -866,16 +839,6 @@ void printChilds(Node* n )
         printf("%s\n", custo_final);
     }
 
-
-//    printf("\n%i | %i | %i \t %i | %i | %i \t %i | %i | %i \t %i | %i | %i \t");
-
-//    printf("\n%i | %i | %i", n->matrix[0][0], n->matrix[0][1], n->matrix[0][2]);
-
-//    printf("\n%i | %i | %i", n->matrix[1][0], n->matrix[1][1], n->matrix[1][2]);
-
-//    printf("\n%i | %i | %i", n->matrix[2][0], n->matrix[2][1], n->matrix[2][2]);
-
-//    printf("\nDistanca: %d \n", n->distFim);
 }
 
 ///
@@ -918,9 +881,6 @@ Node* getMenorValorNA(NodeArray* nde)
     return nLess;
 }
 
-// TODO criar no ref push noRefPush()
-// esta função faz o push em nodes, mas não altera o main NodeList do Node
-//
 Node* FindPath(Node* nodeNow, Node* end)
 {
     //checa se achou
@@ -931,7 +891,7 @@ Node* FindPath(Node* nodeNow, Node* end)
     }
     else
     {
-        static int vezesQueGerous = 0;
+//        static int vezesQueGerous = 0;
 //        int ic = icognitaValue; 0 hard coded
         generate(nodeNow, 0, end);
 
@@ -944,15 +904,10 @@ Node* FindPath(Node* nodeNow, Node* end)
 //        vezesQueGerous +=
 
         closeNode(nodeNow);
-        //buga quando gera o último
 
         if(distTotal > 1){
 
             Node* nextN = getMenorValorNA(nodeNow->childs);
-
-            // TODO change to that
-//            Node* nextN = getMenorValorNA(nodeOpen);
-
 
             return FindPath(nextN, end);
         }
@@ -960,17 +915,6 @@ Node* FindPath(Node* nodeNow, Node* end)
         //procura o node de menor valor no array aberto
         //chama FindPath no menor node encontrado
     }
-}
-
-int nodesTotaisGerados()
-{
-
-//    NodeArray* na = nodeOpen;
-//    NodeArray* nb = nodeClosed;
-//    return nb->size;
-//    int total = (nodeOpen->size + nodeClosed->size);
-//    return total;
-//    return nodeClosed->size;
 }
 
 int printBestPath(Node* foundNode, int val)
@@ -982,8 +926,7 @@ int printBestPath(Node* foundNode, int val)
 
     if(foundNode->nodeListMainParent->mainArray != NULL)
     {
-        int nodeIndex = getNodeIndexInArray(foundNode->nodeListMainParent->mainArray, foundNode);
-
+//        int nodeIndex = getNodeIndexInArray(foundNode->nodeListMainParent->mainArray, foundNode);
 
         if(foundNode->nodeListMainParent->mainArray->mainNode != NULL)
         {
@@ -997,7 +940,6 @@ int printBestPath(Node* foundNode, int val)
 
 int main()
 {
-
     char r;
     bool done = true;
 
@@ -1087,7 +1029,7 @@ int main()
     NodeArray* nc = createNodeArray();
     nodeClosed = nc;
 
-    push(mainArray, mainNode);
+//    push(mainArray, mainNode);
     void_push(nodeOpen, mainNode);
 
     //mainNode->distFim = pesoDePosicaoDiferente(mainNode, endNode);
@@ -1114,35 +1056,10 @@ int main()
     //FindPath! WOooooooooooooooooow 8h +- até aqui
     Node* foundNode = FindPath(mainNode, endNode);
 
-
 //    int total = nodesTotaisGerados();
     printf("\n\nACHOU O MELHOR CAMINHO!\n");
 
     printf("TOTAL DE NODES GERADOS: %d\n\n", nodeClosed->size + nodeOpen->size);
-
-    //printBestPath(foundNode, 0);
-
-//    int a = 0;
-
-//    printf("%d", mainArray->size);
-//    generate(mainNode, 0, endNode);
-
-//    int size = mainNode->childs->size;
-//    NodeList * nl = mainNode->childs->head;
-
-//    printChilds(mainNode);
-
-//    for(int i = 0; i < size; i++)
-//    {
-//        printMatrix(nl->node->matrix);
-//        if(i<size-1) nl = nl->nextNode;
-//        printf("\n");
-//    }
-
-//    printf("\n%x", mainNode->childs->head->node->matrix);
-
-    //printf("\ntamanho: %i", mainNode->childs->size);
-    //printMatrix(mainNode->childs->head->node);
 
     system("PAUSE");
     return 0;
